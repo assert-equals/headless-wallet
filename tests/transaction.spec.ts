@@ -1,14 +1,13 @@
 import { expect, test } from "@playwright/test";
 import { installMockWallet } from "./../src/installMockWallet";
-import { privateKeyToAccount } from "viem/accounts";
-import { custom, http, isHex } from "viem";
+import { mnemonicToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
 
 test.beforeEach(async ({ page }) => {
   await installMockWallet({
     page,
-    account: privateKeyToAccount(
-      isHex(process.env.PRIVATE_KEY) ? process.env.PRIVATE_KEY : "0x",
+    account: mnemonicToAccount(
+      "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent" // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
     ),
     defaultChain: sepolia,
     debug: true,
@@ -28,7 +27,7 @@ test("Metamask Wallet Test Dapp", async ({ page }) => {
   await page.locator("#personalSign").click();
   await expect(
     page.getByText(
-      "0x7ac0fa03981bf136329ffaa21aed4f0ac7fa9a4837e966f16c5bf8783be7e43f41afe27bc4fb75",
+      "0xc15bfe971658b5bf67da31edc7fc4906755d49f4cf29b9a74d557f88ec73a395069b934d142f63a77a0773b329c32a473492cca79feb1256f11809943ec7ff261c",
     ),
   ).toBeVisible();
 });
