@@ -88,48 +88,15 @@ async function eip1193Request({
   method,
   params,
   uuid,
-  icon,
-  debug,
 }: {
   method: string;
   params?: Array<unknown>;
   uuid: string;
-  icon: string;
-  debug?: boolean;
 }) {
   const wallet = wallets.get(uuid);
   if (wallet == null) throw new Error("Account or transport not found");
-
-  try {
-    const result = await wallet.request({
-      method,
-      params,
-    });
-
-    if (debug === true) {
-      console.log(
-        "WALLET",
-        uuid.substring(0, 8),
-        "REQUEST",
-        method,
-        params,
-        "RESULT",
-        result,
-      );
-    }
-    return result;
-  } catch (e) {
-    if (debug === true) {
-      console.log(
-        "WALLET",
-        uuid.substring(0, 8),
-        "REQUEST",
-        method,
-        params,
-        "ERROR",
-        e,
-      );
-    }
-    throw e;
-  }
+  return await wallet.request({
+    method,
+    params,
+  });
 }
