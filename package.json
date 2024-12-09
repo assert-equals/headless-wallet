@@ -1,20 +1,21 @@
 {
-  "name": "@johanneskares/wallet-mock",
+  "name": "@assert-equals/headless-wallet",
   "version": "0.0.0-semantically-released",
-  "description": "Mock Web3 Browser wallets, like Metamask, in Playwright tests.",
+  "description": "Web3 dApp testing with a MetaMask equivalent headless wallet, using Playwright or WebDriver —no extension popups",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
-    "web3",
-    "wallet",
-    "mock",
-    "playwright",
-    "metamask",
-    "ethereum",
     "dapp",
-    "testing"
+    "ethereum",
+    "headless",
+    "metamask",
+    "playwright",
+    "testing",
+    "wallet",
+    "web3",
+    "webdriver"
   ],
-  "author": "Johannes Kares",
+  "author": "Peter Yinusa",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.44.1",
@@ -27,9 +28,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/johanneskares/wallet-mock.git"
+    "url": "git+https://github.com/assert-equals/headless-wallet.git"
   },
-  "namespace": "@johanneskares",
+  "namespace": "@assert-equals",
   "peerDependencies": {
     "@playwright/test": "^1.44.1",
     "viem": "^2.13.8"

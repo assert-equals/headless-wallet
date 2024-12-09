@@ -10,12 +10,12 @@ Fully functional end-to-end (E2E) tests for your decentralized application (dApp
 ## Quickstart
 ### Install
 ```shell
-npm install -D @johanneskares/wallet-mock
+npm install -D @assert-equals/headless-wallet
 ```
 ### Example
 ```ts
 import { test } from "@playwright/test";
-import { installMockWallet } from "@johanneskares/wallet-mock";
+import { installMockWallet } from "@assert-equals/headless-wallet";
 import { privateKeyToAccount } from "viem/accounts";
 import { http } from "viem";
 import { sepolia } from "viem/chains";
@@ -38,11 +38,6 @@ test("Your Test", async ({ page }) => {
 });
 ```
 > **Note:** This setup will execute actual transactions on the blockchain without user intervention using the provided Private Key.
-
-### Uniswap Demo
-The Mock Wallet will show up as an EIP-6963 compatible wallet.
-
-<img width="500" alt="Screenshot Uniswap" src="https://github.com/johanneskares/wallet-mock/assets/1416628/b3d31df0-6273-42da-b00f-63bc8294a592">
 
 ## Mocking
 Here's a simple example of how to mock a specific function while using regular RPC calls for all other functions:
