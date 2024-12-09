@@ -18,13 +18,13 @@
   "author": "Peter Yinusa",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.44.1",
-    "@types/node": "^20.14.2",
-    "dotenv": "^16.4.5",
-    "prettier": "^3.3.2",
-    "semantic-release": "^24.0.0",
-    "typescript": "^5.4.5",
-    "viem": "^2.13.8"
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^20.17.9",
+    "dotenv": "^16.4.7",
+    "prettier": "^3.4.2",
+    "semantic-release": "^24.2.0",
+    "typescript": "^5.7.2",
+    "viem": "^2.21.54"
   },
   "repository": {
     "type": "git",
@@ -32,8 +32,8 @@
   },
   "namespace": "@assert-equals",
   "peerDependencies": {
-    "@playwright/test": "^1.44.1",
-    "viem": "^2.13.8"
+    "@playwright/test": "^1.49.0",
+    "viem": "^2.21.54"
   },
   "scripts": {
     "build": "tsc",
