@@ -10,7 +10,6 @@ test.beforeEach(async ({ page }) => {
       "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent" // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
     ),
     defaultChain: sepolia,
-    debug: true,
   });
 });
 

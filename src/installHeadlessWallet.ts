@@ -7,11 +7,8 @@ import fs from "fs";
 let wallets: Map<string, Wallet> = new Map();
 
 export async function installHeadlessWallet({
-  debug,
   ...params
-}: {
-  debug?: boolean;
-} & ({ page: Page } | { browserContext: BrowserContext }) &
+}: ({ page: Page } | { browserContext: BrowserContext }) &
   (
     | {
         account: LocalAccount;
@@ -40,7 +37,7 @@ export async function installHeadlessWallet({
   const icon = `data:image/png;base64,${base64Icon}`;
 
   await browserOrPage.addInitScript(
-    ({ uuid, icon, debug }) => {
+    ({ uuid, icon }) => {
       // This function needs to be declared in the browser context
       function announceHeadlessWallet() {
         const provider = {
@@ -49,7 +46,6 @@ export async function installHeadlessWallet({
               ...request,
               uuid,
               icon,
-              debug,
             });
           },
           on: () => {},
@@ -80,7 +76,7 @@ export async function installHeadlessWallet({
         announceHeadlessWallet();
       });
     },
-    { uuid, icon, debug },
+    { uuid, icon },
   );
 }
 
