@@ -5,7 +5,7 @@ import { randomUUID } from "crypto";
 
 let wallets: Map<string, Wallet> = new Map();
 
-export async function installMockWallet({
+export async function installHeadlessWallet({
   debug,
   ...params
 }: {

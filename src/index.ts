@@ -1,2 +1,2 @@
-export * from "./installMockWallet";
+export * from "./installHeadlessWallet";
 export * from "./createWallet";
