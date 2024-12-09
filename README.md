@@ -33,7 +33,7 @@ test.beforeEach(async ({ page }) => {
 test("Your Test", async ({ page }) => {
   await page.getByRole("button", { name: "Log In" }).click();
   await page.getByRole("button", { name: "Choose Wallet" }).click();
-  await page.getByRole("menuitem", { name: "Mock Wallet" }).click();
+  await page.getByRole("menuitem", { name: "Headless Wallet" }).click();
 });
 ```
 > **Note:** This setup will execute actual transactions on the blockchain without user intervention using the provided Mnemonic Phrase.

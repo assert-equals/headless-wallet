@@ -33,7 +33,7 @@ export async function installHeadlessWallet({
   // Connecting the browser context to the Node.js playwright context
   await browserOrPage.exposeFunction("eip1193Request", eip1193Request);
 
-  // Everytime we call installMockWallet, we create a new uuid to identify the wallet.
+  // Everytime we call installHeadlessWallet, we create a new uuid to identify the wallet.
   const uuid = randomUUID();
   wallets.set(uuid, wallet);
   const base64Icon = fs.readFileSync('src/assets/joystick.png', 'base64')
@@ -42,7 +42,7 @@ export async function installHeadlessWallet({
   await browserOrPage.addInitScript(
     ({ uuid, icon, debug }) => {
       // This function needs to be declared in the browser context
-      function announceMockWallet() {
+      function announceHeadlessWallet() {
         const provider = {
           request: async (request) => {
             return await eip1193Request({
@@ -70,14 +70,14 @@ export async function installHeadlessWallet({
         window.dispatchEvent(announceEvent);
       }
 
-      announceMockWallet();
+      announceHeadlessWallet();
 
       window.addEventListener("eip6963:requestProvider", () => {
-        announceMockWallet();
+        announceHeadlessWallet();
       });
 
       window.addEventListener("DOMContentLoaded", () => {
-        announceMockWallet();
+        announceHeadlessWallet();
       });
     },
     { uuid, icon, debug },
