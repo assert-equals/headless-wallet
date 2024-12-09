@@ -17,12 +17,12 @@ test.beforeEach(async ({ page }) => {
 test("Metamask Wallet Test Dapp", async ({ page }) => {
   const baseUrl = "https://metamask.github.io/test-dapp/";
   await page.goto(baseUrl);
-  await page.getByRole("button", { name: "USE MOCK WALLET" }).click();
+  await page.getByRole("button", { name: "USE HEADLESS WALLET" }).click();
 
   await expect(
     page.getByRole("heading", { name: "Active Provider" }),
   ).toBeVisible();
-  await expect(page.getByText("Name: Mock Wallet")).toBeVisible();
+  await expect(page.getByText("Name: Headless Wallet")).toBeVisible();
 
   await page.locator("#personalSign").click();
   await expect(
