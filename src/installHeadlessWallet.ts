@@ -43,7 +43,7 @@ export async function installHeadlessWallet({
     ({ uuid, icon, debug }) => {
       // This function needs to be declared in the browser context
       function announceMockWallet() {
-        const provider: EIP1193Provider = {
+        const provider = {
           request: async (request) => {
             return await eip1193Request({
               ...request,
@@ -56,14 +56,14 @@ export async function installHeadlessWallet({
           removeListener: () => {},
         };
 
-        const info: EIP6963ProviderInfo = {
+        const info = {
           uuid,
           name: "Headless Wallet",
           icon,
           rdns: "com.assertequals.headless-wallet",
         };
 
-        const detail: EIP6963ProviderDetail = { info, provider };
+        const detail = { info, provider };
         const announceEvent = new CustomEvent("eip6963:announceProvider", {
           detail: Object.freeze(detail),
         });
@@ -82,27 +82,6 @@ export async function installHeadlessWallet({
     },
     { uuid, icon, debug },
   );
-}
-
-interface EIP6963ProviderInfo {
-  uuid: string;
-  name: string;
-  icon: string;
-  rdns: string;
-}
-
-interface EIP1193Provider {
-  request: (request: {
-    method: string;
-    params?: Array<unknown>;
-  }) => Promise<unknown>; // Standard method for sending requests per EIP-1193
-  on: () => void;
-  removeListener: () => void;
-}
-
-export interface EIP6963ProviderDetail {
-  info: EIP6963ProviderInfo;
-  provider: EIP1193Provider;
 }
 
 async function eip1193Request({
