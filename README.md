@@ -1,9 +1,8 @@
-# Wallet Mock
-Fully functional end-to-end (E2E) tests for your decentralized application (dApp). This package installs a fully operational, headless Web3 Wallet into the [Playwright](https://github.com/microsoft/playwright) Browser Context. The wallet can be configured to execute on the blockchain or return mock responses. It is discoverable through [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) and leverages [viem](https://github.com/wevm/viem) `Account` and `Transport` interfaces for easy customization.
+# Headless Wallet
+Web3 dApp testing with a [MetaMask](https://metamask.io/) equivalent **headless wallet**, using [Playwright](https://playwright.dev/) or [Selenium WebDriver](https://www.selenium.dev/) —no extension popups
 
 ## Features
 - Create comprehensive E2E tests for your dApps, including real blockchain transactions
-- Mock specific calls or all calls to the wallet
 - All wallet actions are pre-approved by default, eliminating the need for user interaction
 - All wallet interactions are headless, meaning, no user interaction is required. You should be testing your dApp, not the wallet
 
@@ -15,16 +14,16 @@ npm install -D @assert-equals/headless-wallet
 ### Example
 ```ts
 import { test } from "@playwright/test";
-import { installMockWallet } from "@assert-equals/headless-wallet";
-import { privateKeyToAccount } from "viem/accounts";
+import { installHeadlessWallet } from "@assert-equals/headless-wallet";
+import { mnemonicToAccount } from "viem/accounts";
 import { http } from "viem";
 import { sepolia } from "viem/chains";
 
 test.beforeEach(async ({ page }) => {
-  await installMockWallet({
+  await installHeadlessWallet({
     page,
-    account: privateKeyToAccount(
-      "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+    account: mnemonicToAccount(
+      "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent", // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
     ),
     defaultChain: sepolia,
     transports: { [sepolia.id]: http() },
@@ -37,52 +36,4 @@ test("Your Test", async ({ page }) => {
   await page.getByRole("menuitem", { name: "Mock Wallet" }).click();
 });
 ```
-> **Note:** This setup will execute actual transactions on the blockchain without user intervention using the provided Private Key.
-
-## Mocking
-Here's a simple example of how to mock a specific function while using regular RPC calls for all other functions:
-
-```ts
-await installMockWallet({
-  page,
-  account: privateKeyToAccount(
-    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-  ),
-  defaultChain: sepolia,
-  transports: {
-    [sepolia.id]: (config) => {
-      return custom({
-        request: async ({ method, params }) => {
-          // Mock only this RPC call
-          if (method === "eth_sendTransaction") {
-            return "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
-          }
-
-          return await http()(config).request({ method, params });
-        },
-      })(config);
-    }
-  },
-});
-```
-
-## Testing with Hardhat
-To test with a local Hardhat node:
-
-1. Start your local Hardhat Node:
-   ```shell
-   npx hardhat node
-   ```
-
-2. Connect the Mock Wallet to your Hardhat Node:
-   ```ts
-   import { hardhat } from "viem/chains";
-
-   await installMockWallet({
-     page,
-     account: privateKeyToAccount(
-       "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-     ),
-     defaultChain: hardhat,
-   });
-   ```
+> **Note:** This setup will execute actual transactions on the blockchain without user intervention using the provided Mnemonic Phrase.
