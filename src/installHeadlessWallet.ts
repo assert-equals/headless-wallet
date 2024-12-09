@@ -19,13 +19,10 @@ export async function installHeadlessWallet({
         wallet: Wallet;
       }
   )) {
-  const browserOrPage =
-    "browserContext" in params ? params.browserContext : params.page;
+  const browserOrPage = "browserContext" in params ? params.browserContext : params.page;
 
   const wallet: Wallet =
-    "wallet" in params
-      ? params.wallet
-      : createWallet(params.account, params.transports, params.defaultChain);
+    "wallet" in params ? params.wallet : createWallet(params.account, params.transports, params.defaultChain);
 
   // Connecting the browser context to the Node.js playwright context
   await browserOrPage.exposeFunction("eip1193Request", eip1193Request);
@@ -33,7 +30,7 @@ export async function installHeadlessWallet({
   // Everytime we call installHeadlessWallet, we create a new uuid to identify the wallet.
   const uuid = randomUUID();
   wallets.set(uuid, wallet);
-  const base64Icon = fs.readFileSync('src/assets/joystick.png', 'base64')
+  const base64Icon = fs.readFileSync("src/assets/joystick.png", "base64");
   const icon = `data:image/png;base64,${base64Icon}`;
 
   await browserOrPage.addInitScript(
@@ -45,23 +42,23 @@ export async function installHeadlessWallet({
             return await eip1193Request({
               ...request,
               uuid,
-              icon,
+              icon
             });
           },
           on: () => {},
-          removeListener: () => {},
+          removeListener: () => {}
         };
 
         const info = {
           uuid,
           name: "Headless Wallet",
           icon,
-          rdns: "com.assertequals.headless-wallet",
+          rdns: "com.assertequals.headless-wallet"
         };
 
         const detail = { info, provider };
         const announceEvent = new CustomEvent("eip6963:announceProvider", {
-          detail: Object.freeze(detail),
+          detail: Object.freeze(detail)
         });
         window.dispatchEvent(announceEvent);
       }
@@ -76,23 +73,15 @@ export async function installHeadlessWallet({
         announceHeadlessWallet();
       });
     },
-    { uuid, icon },
+    { uuid, icon }
   );
 }
 
-async function eip1193Request({
-  method,
-  params,
-  uuid,
-}: {
-  method: string;
-  params?: Array<unknown>;
-  uuid: string;
-}) {
+async function eip1193Request({ method, params, uuid }: { method: string; params?: Array<unknown>; uuid: string }) {
   const wallet = wallets.get(uuid);
   if (wallet == null) throw new Error("Account or transport not found");
   return await wallet.request({
     method,
-    params,
+    params
   });
 }

@@ -1,46 +1,25 @@
-import {
-  LocalAccount,
-  Hex,
-  Transport,
-  createWalletClient,
-  fromHex,
-  type Chain,
-  http,
-} from "viem";
+import { LocalAccount, Hex, Transport, createWalletClient, fromHex, type Chain, http } from "viem";
 import * as chains from "viem/chains";
 
 export type Wallet = ReturnType<typeof createWallet>;
 export type WalletRequest = Wallet["request"];
 
-export function createWallet(
-  account: LocalAccount,
-  transports?: Record<number, Transport>,
-  defaultChain?: Chain,
-) {
+export function createWallet(account: LocalAccount, transports?: Record<number, Transport>, defaultChain?: Chain) {
   let chain: Chain = defaultChain ?? getChain();
 
   return {
-    request: async ({
-      method,
-      params,
-    }: {
-      method: string;
-      params?: Array<unknown>;
-    }) => {
+    request: async ({ method, params }: { method: string; params?: Array<unknown> }) => {
       const client = createWalletClient({
         account,
         chain,
-        transport: transports?.[chain.id] ?? http(),
+        transport: transports?.[chain.id] ?? http()
       });
 
       if (method === "eth_accounts" || method === "eth_requestAccounts") {
         return await client.getAddresses();
       }
 
-      if (
-        method === "wallet_requestPermissions" ||
-        method === "wallet_revokePermissions"
-      ) {
+      if (method === "wallet_requestPermissions" || method === "wallet_revokePermissions") {
         return [{ parentCapability: "eth_accounts" }];
       }
 
@@ -54,8 +33,8 @@ export function createWallet(
       if (method === "personal_sign") {
         return await client.account.signMessage({
           message: {
-            raw: params?.[0] as Hex,
-          },
+            raw: params?.[0] as Hex
+          }
         });
       }
 
@@ -78,7 +57,7 @@ export function createWallet(
         return await client.sendTransaction({
           to: (params?.[0] as any).to,
           data: (params?.[0] as any).data,
-          value: (params?.[0] as any).value,
+          value: (params?.[0] as any).value
           // Let viem handle the gas calcutation
           // gas: (params?.[0] as any).gas ?? (params?.[0] as any).gasLimit,
           // gasPrice: (params?.[0] as any).gasPrice,
@@ -89,9 +68,9 @@ export function createWallet(
 
       return await client.request({
         method: method as any,
-        params: params as any,
+        params: params as any
       });
-    },
+    }
   };
 }
 
