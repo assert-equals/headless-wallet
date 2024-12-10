@@ -48,7 +48,6 @@
     "format": "prettier --write .",
     "start": "ts-node src/server.ts",
     "test:playwright": "playwright test --headed",
-    "test:webdriver": "ts-node tests/webdriver/transaction.spec.ts",
-    "install-conventional-commit": "curl -o- https://raw.githubusercontent.com/tapsellorg/conventional-commits-git-hook/master/scripts/install.sh | sh"
+    "test:webdriver": "ts-node tests/webdriver/transaction.spec.ts"
   }
 }
