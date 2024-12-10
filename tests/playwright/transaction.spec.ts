@@ -1,8 +1,19 @@
 import { expect, test } from "@playwright/test";
 import { installHeadlessWallet } from "../../src/installHeadlessWallet";
+import { HeadlessWalletServer } from "../../src/server";
+
+let server: HeadlessWalletServer;
 
 test.beforeEach(async ({ page }) => {
+  // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
+  const mnemonic: string = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
+  server = new HeadlessWalletServer({ mnemonic });
+  await server.start();
   await installHeadlessWallet({ page });
+});
+
+test.afterEach(async () => {
+  await server.stop();
 });
 
 test("Metamask Wallet Test Dapp", async ({ page }) => {

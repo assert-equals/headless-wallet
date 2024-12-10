@@ -1,6 +1,6 @@
 {
   "name": "@assert-equals/headless-wallet",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Web3 dApp testing with a MetaMask equivalent headless wallet, using Playwright or WebDriver —no extension popups",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -45,7 +45,6 @@
     "build": "tsc",
     "dev": "tsc -W",
     "format": "prettier --write .",
-    "start": "ts-node src/server.ts",
     "test:playwright": "playwright test --headed",
     "test:webdriver": "ts-node tests/webdriver/transaction.spec.ts"
   }

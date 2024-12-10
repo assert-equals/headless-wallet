@@ -1,8 +1,13 @@
 import { installHeadlessWallet } from "../../src/installHeadlessWallet";
+import { HeadlessWalletServer } from "../../src/server";
 import { Builder, Browser, WebDriver, By, until } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome";
 
 (async function example() {
+  // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
+  const mnemonic: string = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
+  const server: HeadlessWalletServer = new HeadlessWalletServer({ mnemonic });
+  await server.start();
   const options = new Options();
   options.enableBidi();
   let driver: WebDriver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
@@ -30,5 +35,6 @@ import { Options } from "selenium-webdriver/chrome";
     );
   } finally {
     await driver.quit();
+    await server.stop();
   }
 })();

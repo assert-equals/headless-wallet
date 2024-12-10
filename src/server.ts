@@ -1,13 +1,34 @@
 import createApp from "./app";
-import http from "http";
+import http, { Server } from "http";
 
-// MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
-const mnemonic = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
-const chain = 11_155_111;
-const port = 3000;
+export class HeadlessWalletServer {
+  private server: Server;
+  private mnemonic: string;
+  private chain: number;
+  private port: number;
 
-const server = http.createServer(createApp(mnemonic, chain));
+  constructor({ mnemonic, chain = 11_155_111, port = 3000 }: { mnemonic: string; chain?: number; port?: number }) {
+    this.mnemonic = mnemonic;
+    this.chain = chain;
+    this.port = port;
+    this.server = http.createServer(createApp(this.mnemonic, this.chain));
+  }
 
-server.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+  start(): Promise<void> {
+    return new Promise((resolve) => {
+      this.server.listen(this.port, () => {
+        console.log(`[JSON-RPC]: Server is running at http://localhost:${this.port}`);
+        resolve();
+      });
+    });
+  }
+
+  stop(): Promise<void> {
+    return new Promise((resolve) => {
+      this.server.close(() => {
+        console.log(`[JSON-RPC]: Server has been stopped`);
+        resolve();
+      });
+    });
+  }
+}
