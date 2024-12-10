@@ -19,10 +19,13 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.49.0",
+    "@types/express": "^5.0.0",
     "@types/node": "^20.17.9",
     "dotenv": "^16.4.7",
+    "express": "^4.21.1",
     "prettier": "^3.4.2",
     "semantic-release": "^24.2.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "viem": "^2.21.54"
   },
@@ -38,6 +41,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -W",
+    "format": "prettier --write .",
+    "start": "ts-node src/server.ts",
     "test": "playwright test",
     "test-ui": "playwright test --ui",
     "test-debug": "npx playwright test --project='Google Chrome' --debug",

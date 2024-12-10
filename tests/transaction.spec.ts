@@ -1,15 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { installHeadlessWallet } from "../src/installHeadlessWallet";
-import { mnemonicToAccount } from "viem/accounts";
-import { sepolia } from "viem/chains";
 
 test.beforeEach(async ({ page }) => {
   await installHeadlessWallet({
-    page,
-    account: mnemonicToAccount(
-      "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent" // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
-    ),
-    defaultChain: sepolia
+    page
   });
 });
 

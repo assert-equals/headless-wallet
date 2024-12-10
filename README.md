@@ -21,18 +21,10 @@ npm install -D @assert-equals/headless-wallet
 ```ts
 import { test } from "@playwright/test";
 import { installHeadlessWallet } from "@assert-equals/headless-wallet";
-import { mnemonicToAccount } from "viem/accounts";
-import { http } from "viem";
-import { sepolia } from "viem/chains";
 
 test.beforeEach(async ({ page }) => {
   await installHeadlessWallet({
-    page,
-    account: mnemonicToAccount(
-      "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent" // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
-    ),
-    defaultChain: sepolia,
-    transports: { [sepolia.id]: http() }
+    page
   });
 });
 
