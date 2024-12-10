@@ -1,5 +1,4 @@
-import { installHeadlessWallet } from "../../src/installHeadlessWallet";
-import { HeadlessWalletServer } from "../../src/server";
+import { HeadlessWalletServer, installHeadlessWallet } from "../../src";
 import { Builder, Browser, WebDriver, By, until } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome";
 

@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { installHeadlessWallet } from "../../src/installHeadlessWallet";
-import { HeadlessWalletServer } from "../../src/server";
+import { HeadlessWalletServer, installHeadlessWallet } from "../../src/";
 
 let server: HeadlessWalletServer;
 
