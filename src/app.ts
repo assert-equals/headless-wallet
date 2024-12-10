@@ -4,7 +4,7 @@ import { createWalletClient, http } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { getChainById } from "./utils";
 
-async function walletActions(client: any, method: any, params: any) {
+async function walletActions(client: any, method: string, params?: Array<unknown>) {
   switch (method) {
     case "eth_accounts":
       return await client.getAddresses();
@@ -13,7 +13,7 @@ async function walletActions(client: any, method: any, params: any) {
     case "personal_sign":
       return await client.account.signMessage({
         message: {
-          raw: params[0]
+          raw: params?.[0]
         }
       });
     default:

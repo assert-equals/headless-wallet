@@ -20,10 +20,20 @@ npm install -D @assert-equals/headless-wallet
 
 ```ts
 import { test } from "@playwright/test";
-import { installHeadlessWallet } from "@assert-equals/headless-wallet";
+import { HeadlessWalletServer, installHeadlessWallet } from "@assert-equals/headless-wallet";
+
+let server: HeadlessWalletServer;
 
 test.beforeEach(async ({ page }) => {
+  // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
+  const mnemonic: string = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
+  server = new HeadlessWalletServer({ mnemonic });
+  await server.start();
   await installHeadlessWallet({ page });
+});
+
+test.afterEach(async () => {
+  await server.stop();
 });
 
 test("Metamask Wallet Test Dapp", async ({ page }) => {
@@ -35,11 +45,15 @@ test("Metamask Wallet Test Dapp", async ({ page }) => {
 ### WebDriver Example
 
 ```ts
-import { installHeadlessWallet } from "../../src/installHeadlessWallet";
+import { HeadlessWalletServer, installHeadlessWallet } from "@assert-equals/headless-wallet";
 import { Builder, Browser, WebDriver, By, until } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome";
 
 (async function test() {
+  // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
+  const mnemonic: string = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
+  const server: HeadlessWalletServer = new HeadlessWalletServer({ mnemonic });
+  await server.start();
   const options: Options = new Options();
   options.enableBidi();
   let driver: WebDriver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
@@ -50,6 +64,7 @@ import { Options } from "selenium-webdriver/chrome";
     await driver.wait(until.elementTextContains(providerName, "Headless Wallet"), 1000);
   } finally {
     await driver.quit();
+    await server.stop();
   }
 })();
 ```
