@@ -1,6 +1,6 @@
 {
   "name": "@assert-equals/headless-wallet",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Web3 dApp testing with a MetaMask equivalent headless wallet, using Playwright or WebDriver —no extension popups",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
