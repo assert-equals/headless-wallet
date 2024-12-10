@@ -19,11 +19,15 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.49.0",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^20.17.9",
+    "@types/selenium-webdriver": "^4.1.27",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "prettier": "^3.4.2",
+    "selenium-webdriver": "^4.27.0",
     "semantic-release": "^24.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
@@ -43,9 +47,8 @@
     "dev": "tsc -W",
     "format": "prettier --write .",
     "start": "ts-node src/server.ts",
-    "test": "playwright test",
-    "test-ui": "playwright test --ui",
-    "test-debug": "npx playwright test --project='Google Chrome' --debug",
+    "test:playwright": "playwright test --headed",
+    "test:webdriver": "ts-node tests/webdriver/transaction.spec.ts",
     "install-conventional-commit": "curl -o- https://raw.githubusercontent.com/tapsellorg/conventional-commits-git-hook/master/scripts/install.sh | sh"
   }
 }

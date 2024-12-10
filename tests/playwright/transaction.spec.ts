@@ -1,10 +1,8 @@
 import { expect, test } from "@playwright/test";
-import { installHeadlessWallet } from "../src/installHeadlessWallet";
+import { installHeadlessWallet } from "../../src/installHeadlessWallet";
 
 test.beforeEach(async ({ page }) => {
-  await installHeadlessWallet({
-    page
-  });
+  await installHeadlessWallet({ page });
 });
 
 test("Metamask Wallet Test Dapp", async ({ page }) => {

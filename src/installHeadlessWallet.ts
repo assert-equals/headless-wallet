@@ -1,72 +1,86 @@
-import type { BrowserContext, Page } from "@playwright/test";
-import fs from "fs";
+import ScriptManager from "selenium-webdriver/bidi/scriptManager";
 
-const wallet = {
-  request: async ({ method, params }) => {
-    const response = await fetch(`http://localhost:3000/api`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ method, params })
-    });
-    return await response.json();
+declare global {
+  interface Window {
+    wallet: any;
+    eip1193Request: any;
   }
-};
-
-export async function installHeadlessWallet({ ...params }: { page: Page } | { browserContext: BrowserContext }) {
-  const browserOrPage = "browserContext" in params ? params.browserContext : params.page;
-
-  // Connecting the browser context to the Node.js playwright context
-  await browserOrPage.exposeFunction("eip1193Request", eip1193Request);
-
-  const base64Icon = fs.readFileSync("src/assets/joystick.png", "base64");
-  const icon = `data:image/png;base64,${base64Icon}`;
-
-  await browserOrPage.addInitScript(
-    ({ icon }) => {
-      // This function needs to be declared in the browser context
-      function announceHeadlessWallet() {
-        const provider = {
-          request: async (request) => {
-            return await eip1193Request({
-              ...request,
-              icon
-            });
-          },
-          on: () => {},
-          removeListener: () => {}
-        };
-
-        const info = {
-          uuid: "c71651cf-45b8-4b6e-8b6f-e4d0e0b6609d",
-          name: "Headless Wallet",
-          icon,
-          rdns: "com.assertequals.headless-wallet"
-        };
-
-        const detail = { info, provider };
-        const announceEvent = new CustomEvent("eip6963:announceProvider", {
-          detail: Object.freeze(detail)
-        });
-        window.dispatchEvent(announceEvent);
-      }
-
-      announceHeadlessWallet();
-
-      window.addEventListener("eip6963:requestProvider", () => {
-        announceHeadlessWallet();
-      });
-
-      window.addEventListener("DOMContentLoaded", () => {
-        announceHeadlessWallet();
-      });
-    },
-    { icon }
-  );
 }
 
-async function eip1193Request({ method, params }: { method: string; params?: Array<unknown> }) {
-  return await wallet.request({
+export async function installHeadlessWallet({ ...params }) {
+  let context: any;
+  if ("browserContext" in params) {
+    context = params.browserContext;
+    context.addInitScript(injectedWalletProvider);
+  } else if ("page" in params) {
+    context = params.page;
+    context.addInitScript(injectedWalletProvider);
+  } else if ("driver" in params) {
+    context = params.driver;
+    const handle: string = await context.getWindowHandle();
+    const manager = await ScriptManager(handle, context);
+    const script: any = injectedWalletProvider.toString();
+    await manager.addPreloadScript(script);
+  }
+}
+
+function injectedWalletProvider() {
+  window.wallet = {
+    request: async ({ method, params }: { method: string; params?: Array<unknown> }) => {
+      const response = await fetch(`http://localhost:3000/api`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ method, params })
+      });
+      return await response.json();
+    }
+  };
+
+  window.eip1193Request = async function eip1193Request({
     method,
     params
+  }: {
+    method: string;
+    params?: Array<unknown>;
+  }) {
+    return await window.wallet.request({
+      method,
+      params
+    });
+  };
+
+  function announceHeadlessWallet() {
+    const provider = {
+      request: async (request: { method: string; params?: Array<unknown> }) => {
+        return await window.eip1193Request({
+          ...request
+        });
+      },
+      on: () => {},
+      removeListener: () => {}
+    };
+
+    const info = {
+      uuid: "c71651cf-45b8-4b6e-8b6f-e4d0e0b6609d",
+      name: "Headless Wallet",
+      icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><text x='50%' y='50%' font-size='40' text-anchor='middle' alignment-baseline='central' fill='black'>🕹️</text></svg>",
+      rdns: "com.assertequals.headless-wallet"
+    };
+
+    const detail = { info, provider };
+    const announceEvent = new CustomEvent("eip6963:announceProvider", {
+      detail: Object.freeze(detail)
+    });
+    window.dispatchEvent(announceEvent);
+  }
+
+  announceHeadlessWallet();
+
+  window.addEventListener("eip6963:requestProvider", () => {
+    announceHeadlessWallet();
+  });
+
+  window.addEventListener("DOMContentLoaded", () => {
+    announceHeadlessWallet();
   });
 }

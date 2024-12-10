@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { createWalletClient, http } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { getChainById } from "./utils";
@@ -28,6 +29,7 @@ const createApp = (mnemonic: string, chain: number) => {
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+  app.use(cors());
 
   app.post("/api", async (req, res) => {
     const { method, params } = req.body;
