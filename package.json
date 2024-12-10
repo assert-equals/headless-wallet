@@ -28,7 +28,6 @@
     "express": "^4.21.1",
     "prettier": "^3.4.2",
     "selenium-webdriver": "^4.27.0",
-    "semantic-release": "^24.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "viem": "^2.21.54"
