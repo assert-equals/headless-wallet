@@ -17,7 +17,6 @@ export class HeadlessWalletServer {
   start(): Promise<void> {
     return new Promise((resolve) => {
       this.server.listen(this.port, () => {
-        console.log(`[JSON-RPC]: Server is running at http://localhost:${this.port}`);
         resolve();
       });
     });
@@ -26,7 +25,6 @@ export class HeadlessWalletServer {
   stop(): Promise<void> {
     return new Promise((resolve) => {
       this.server.close(() => {
-        console.log(`[JSON-RPC]: Server has been stopped`);
         resolve();
       });
     });

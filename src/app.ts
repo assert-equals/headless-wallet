@@ -4,7 +4,7 @@ import { createWalletClient, http } from "viem";
 import { mnemonicToAccount } from "viem/accounts";
 import { getChainById } from "./utils";
 
-async function walletActions(client: any, method: string, params?: Array<unknown>) {
+const walletActions = async (client: any, method: string, params?: Array<unknown>) => {
   switch (method) {
     case "eth_accounts":
       return await client.getAddresses();
@@ -22,7 +22,7 @@ async function walletActions(client: any, method: string, params?: Array<unknown
         params
       });
   }
-}
+};
 
 const createApp = (mnemonic: string, chain: number) => {
   const app = express();
@@ -33,13 +33,11 @@ const createApp = (mnemonic: string, chain: number) => {
 
   app.post("/api", async (req, res) => {
     const { method, params } = req.body;
-    console.log(`[JSON-RPC]: Request ${JSON.stringify(req.body)}`);
     let result: any;
     const account = mnemonicToAccount(mnemonic);
     const client = createWalletClient({ account, chain: getChainById(chain), transport: http() });
     try {
       result = await walletActions(client, method, params);
-      console.log(`[JSON-RPC]: Result ${JSON.stringify(result)}`);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error });
