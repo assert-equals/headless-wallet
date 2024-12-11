@@ -1,33 +1,49 @@
+import { BrowserContext, Page } from "@playwright/test";
+import { WebDriver } from "selenium-webdriver";
 import ScriptManager from "selenium-webdriver/bidi/scriptManager";
 
 declare global {
   interface Window {
     wallet: any;
     eip1193Request: any;
+    eip1193Port: any;
   }
 }
 
-export async function installHeadlessWallet({ ...params }) {
-  let context: any;
-  if ("browserContext" in params) {
-    context = params.browserContext;
-    context.addInitScript(injectedWalletProvider);
-  } else if ("page" in params) {
-    context = params.page;
-    context.addInitScript(injectedWalletProvider);
-  } else if ("driver" in params) {
-    context = params.driver;
-    const handle: string = await context.getWindowHandle();
-    const manager = await ScriptManager(handle, context);
+export const installHeadlessWallet = async ({
+  page,
+  browserContext,
+  driver,
+  port = 3000
+}: {
+  page?: Page;
+  browserContext?: BrowserContext;
+  driver?: WebDriver;
+  port?: number;
+}) => {
+  if (browserContext) {
+    browserContext.addInitScript((port: number) => {
+      window.eip1193Port = port;
+    }, port);
+    browserContext.addInitScript(injectedWalletProvider);
+  } else if (page) {
+    page.addInitScript((port: number) => {
+      window.eip1193Port = port;
+    }, port);
+    page.addInitScript(injectedWalletProvider);
+  } else if (driver) {
+    const handle: string = await driver.getWindowHandle();
+    const manager = await ScriptManager(handle, driver as any);
+    await manager.addPreloadScript(`window.eip1193Port = '${port}'` as any);
     const script: any = injectedWalletProvider.toString();
     await manager.addPreloadScript(script);
   }
-}
+};
 
-function injectedWalletProvider() {
+const injectedWalletProvider = () => {
   window.wallet = {
     request: async ({ method, params }: { method: string; params?: Array<unknown> }) => {
-      const response = await fetch(`http://localhost:3000/api`, {
+      const response = await fetch(`http://localhost:${window.eip1193Port}/api`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ method, params })
@@ -36,20 +52,14 @@ function injectedWalletProvider() {
     }
   };
 
-  window.eip1193Request = async function eip1193Request({
-    method,
-    params
-  }: {
-    method: string;
-    params?: Array<unknown>;
-  }) {
+  window.eip1193Request = async ({ method, params }: { method: string; params?: Array<unknown> }) => {
     return await window.wallet.request({
       method,
       params
     });
   };
 
-  function announceHeadlessWallet() {
+  const announceHeadlessWallet = () => {
     const provider = {
       request: async (request: { method: string; params?: Array<unknown> }) => {
         return await window.eip1193Request({
@@ -72,7 +82,7 @@ function injectedWalletProvider() {
       detail: Object.freeze(detail)
     });
     window.dispatchEvent(announceEvent);
-  }
+  };
 
   announceHeadlessWallet();
 
@@ -83,4 +93,4 @@ function injectedWalletProvider() {
   window.addEventListener("DOMContentLoaded", () => {
     announceHeadlessWallet();
   });
-}
+};
