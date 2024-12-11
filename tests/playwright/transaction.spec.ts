@@ -5,10 +5,11 @@ let server: HeadlessWalletServer;
 
 test.beforeEach(async ({ page }) => {
   // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
+  const port: number = 8001;
   const mnemonic: string = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
-  server = new HeadlessWalletServer({ mnemonic });
+  server = new HeadlessWalletServer({ mnemonic, port });
   await server.start();
-  await installHeadlessWallet({ page });
+  await installHeadlessWallet({ page, port });
 });
 
 test.afterEach(async () => {
