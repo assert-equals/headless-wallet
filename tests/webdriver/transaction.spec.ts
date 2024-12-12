@@ -3,9 +3,7 @@ import { Builder, Browser, WebDriver, By, until } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome";
 
 (async function example() {
-  // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
-  const mnemonic: string = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
-  const server: HeadlessWalletServer = new HeadlessWalletServer({ mnemonic });
+  const server: HeadlessWalletServer = new HeadlessWalletServer({ mnemonic: "" });
   await server.start();
   const options = new Options();
   options.enableBidi();
@@ -25,13 +23,7 @@ import { Options } from "selenium-webdriver/chrome";
     await personalSign.click();
 
     const personalSignResult = await driver.findElement(By.css("#personalSignResult"));
-    await driver.wait(
-      until.elementTextContains(
-        personalSignResult,
-        "0xc15bfe971658b5bf67da31edc7fc4906755d49f4cf29b9a74d557f88ec73a395069b934d142f63a77a0773b329c32a473492cca79feb1256f11809943ec7ff261c"
-      ),
-      1000
-    );
+    await driver.wait(until.elementTextContains(personalSignResult, "0x"), 1000);
   } finally {
     await driver.quit();
     await server.stop();

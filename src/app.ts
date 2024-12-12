@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { createWalletClient, http } from "viem";
-import { mnemonicToAccount } from "viem/accounts";
+import { english, generateMnemonic, mnemonicToAccount } from "viem/accounts";
 import { getChainById } from "./utils";
 
 const walletActions = async (client: any, method: string, params?: Array<unknown>) => {
@@ -26,16 +26,17 @@ const walletActions = async (client: any, method: string, params?: Array<unknown
 
 const createApp = (mnemonic: string, chain: number) => {
   const app = express();
-
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(cors());
 
+  mnemonic = mnemonic || generateMnemonic(english);
+  const account = mnemonicToAccount(mnemonic);
+  const client = createWalletClient({ account, chain: getChainById(chain), transport: http() });
+
   app.post("/api", async (req, res) => {
     const { method, params } = req.body;
     let result: any;
-    const account = mnemonicToAccount(mnemonic);
-    const client = createWalletClient({ account, chain: getChainById(chain), transport: http() });
     try {
       result = await walletActions(client, method, params);
       res.json(result);

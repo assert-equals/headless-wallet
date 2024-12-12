@@ -51,9 +51,7 @@ import { Builder, Browser, WebDriver, By, until } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome";
 
 (async function test() {
-  // MetaMask test seed https://github.com/MetaMask/metamask-extension/blob/v12.8.1/test/e2e/seeder/ganache.ts
-  const mnemonic: string = "phrase upgrade clock rough situate wedding elder clever doctor stamp excess tent";
-  const server: HeadlessWalletServer = new HeadlessWalletServer({ mnemonic });
+  const server: HeadlessWalletServer = new HeadlessWalletServer({ mnemonic: "" });
   await server.start();
   const options: Options = new Options();
   options.enableBidi();
