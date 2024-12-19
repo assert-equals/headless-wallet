@@ -18,6 +18,16 @@ const walletActions = async (client: any, method: string, params?: Array<unknown
         value
       });
     }
+    case "eth_signTypedData_v3":
+    case "eth_signTypedData_v4": {
+      const { domain, types, primaryType, message } = JSON.parse(params?.[1] as string);
+      return await client.signTypedData({
+        domain,
+        types,
+        primaryType,
+        message
+      });
+    }
     case "personal_sign":
       return await client.account.signMessage({
         message: {
