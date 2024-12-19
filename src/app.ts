@@ -10,6 +10,14 @@ const walletActions = async (client: any, method: string, params?: Array<unknown
       return await client.getAddresses();
     case "eth_requestAccounts":
       return await client.requestAddresses();
+    case "eth_sendTransaction": {
+      const { data, to, value } = params?.[0] as any;
+      return await client.sendTransaction({
+        data,
+        to,
+        value
+      });
+    }
     case "personal_sign":
       return await client.account.signMessage({
         message: {
