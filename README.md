@@ -2,6 +2,8 @@
 
 Web3 dApp testing with a [MetaMask](https://metamask.io/) equivalent **headless wallet**, using [Playwright](https://playwright.dev/) or [Selenium WebDriver](https://www.selenium.dev/) —no extension popups
 
+<img src="src/assets/Headless-Wallet.png" alt="Headless Wallet" width="697" height="456" />
+
 ## Features
 
 - Create comprehensive E2E tests for your dApps, including real blockchain transactions
