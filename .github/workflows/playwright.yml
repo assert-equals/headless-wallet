@@ -1,4 +1,4 @@
-name: Publish package to npm
+name: Playwright Tests
 on:
   push:
     branches:
