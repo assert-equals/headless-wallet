@@ -7,9 +7,8 @@ import { getChainById } from "./utils";
 const walletActions = async (client: any, method: string, params?: Array<unknown>) => {
   switch (method) {
     case "eth_accounts":
-      return await client.getAddresses();
     case "eth_requestAccounts":
-      return await client.requestAddresses();
+      return (await client.getAddresses()).map((address: string) => address.toLowerCase());
     case "eth_sendTransaction": {
       const { data, to, value } = params?.[0] as any;
       return await client.sendTransaction({
