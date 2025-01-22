@@ -61,6 +61,7 @@ const injectedWalletProvider = () => {
 
   const announceHeadlessWallet = () => {
     const provider = {
+      isMetaMask: true,
       request: async (request: { method: string; params?: Array<unknown> }) => {
         return await window.eip1193Request({
           ...request

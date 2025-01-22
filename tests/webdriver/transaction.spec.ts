@@ -19,11 +19,11 @@ import { Options } from "selenium-webdriver/chrome";
     const activeProviderName = await driver.findElement(By.css("#activeProviderName"));
     await driver.wait(until.elementTextContains(activeProviderName, "Headless Wallet"), 1000);
 
-    // const personalSign = await driver.findElement(By.css("#personalSign"));
-    // await personalSign.click();
+    const personalSign = await driver.findElement(By.css("#personalSign"));
+    await personalSign.click();
 
-    // const personalSignResult = await driver.findElement(By.css("#personalSignResult"));
-    // await driver.wait(until.elementTextContains(personalSignResult, "0x"), 1000);
+    const personalSignResult = await driver.findElement(By.css("#personalSignResult"));
+    await driver.wait(until.elementTextContains(personalSignResult, "0x"), 1000);
   } finally {
     await driver.quit();
     await server.stop();
