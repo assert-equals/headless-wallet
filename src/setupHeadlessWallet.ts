@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-export const installHeadlessWallet = async ({
+export const setupHeadlessWallet = async ({
   page,
   browserContext,
   driver,

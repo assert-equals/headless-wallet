@@ -1,2 +1,2 @@
-export * from "./installHeadlessWallet";
+export * from "./setupHeadlessWallet";
 export * from "./server";

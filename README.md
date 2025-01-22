@@ -22,7 +22,7 @@ npm install -D @assert-equals/headless-wallet
 
 ```ts
 import { test } from "@playwright/test";
-import { HeadlessWalletServer, installHeadlessWallet } from "@assert-equals/headless-wallet";
+import { HeadlessWalletServer, setupHeadlessWallet } from "@assert-equals/headless-wallet";
 
 let server: HeadlessWalletServer;
 
@@ -32,7 +32,7 @@ test.beforeEach(async ({ page }) => {
   const port: number = 8001;
   server = new HeadlessWalletServer({ mnemonic, port });
   await server.start();
-  await installHeadlessWallet({ page, port });
+  await setupHeadlessWallet({ page, port });
 });
 
 test.afterEach(async () => {
@@ -48,7 +48,7 @@ test("Metamask Wallet Test Dapp", async ({ page }) => {
 ### WebDriver Example
 
 ```ts
-import { HeadlessWalletServer, installHeadlessWallet } from "@assert-equals/headless-wallet";
+import { HeadlessWalletServer, setupHeadlessWallet } from "@assert-equals/headless-wallet";
 import { Builder, Browser, WebDriver, By, until } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome";
 
@@ -59,7 +59,7 @@ import { Options } from "selenium-webdriver/chrome";
   options.enableBidi();
   let driver: WebDriver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
   try {
-    await installHeadlessWallet({ driver });
+    await setupHeadlessWallet({ driver });
     await driver.get("https://metamask.github.io/test-dapp/");
     const providerName = await driver.findElement(By.css("#activeProviderName"));
     await driver.wait(until.elementTextContains(providerName, "Headless Wallet"), 1000);
